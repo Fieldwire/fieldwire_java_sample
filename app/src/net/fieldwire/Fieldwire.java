@@ -20,7 +20,7 @@ public class Fieldwire {
                 .create();
 
         RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint("http://localhost:3000/api/v2")
+                .setEndpoint("https://console.fieldwire.net/api/v3")
                 .setConverter(new GsonConverter(gson))
                 .build();
 
