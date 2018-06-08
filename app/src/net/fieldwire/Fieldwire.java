@@ -3,16 +3,43 @@ package net.fieldwire;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import retrofit.RestAdapter;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import retrofit.mime.TypedFile;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.io.File;
 
 public class Fieldwire {
-    private static final String API_TOKEN = ""; // REPLACE!
+    private static final String API_TOKEN = "f414fd23cb902799c492929f465211be"; // REPLACE!
     private static final String CONTENT_TYPE = "application/json";
+
+    // private static final String END_POINT = "https://console.fieldwire.net";
+    private static final String END_POINT = "http://localhost:3000";
+
+    public static Response doAWSPostRequest(AWSPostToken awsPostToken, String filename)
+    {
+        RestAdapter adapter = new RestAdapter.Builder()
+                .setEndpoint(awsPostToken.post_address)
+                .build();
+
+        AWSS3PostService service = adapter.create(AWSS3PostService.class);
+
+        File file = new File(filename);
+        System.out.println(file.getName());
+
+        return service.postFileToAWS(
+                awsPostToken.post_parameters.get("key"),
+                awsPostToken.post_parameters.get("policy"),
+                awsPostToken.post_parameters.get("x-amz-signature"),
+                awsPostToken.post_parameters.get("x-amz-date"),
+                awsPostToken.post_parameters.get("x-amz-credential"),
+                awsPostToken.post_parameters.get("acl"),
+                awsPostToken.post_parameters.get("x-amz-algorithm"),
+                new TypedFile("multipart/form-data", file));
+    }
 
     public static void main(String[] args) {
         Gson gson = new GsonBuilder()
@@ -20,22 +47,26 @@ public class Fieldwire {
                 .create();
 
         RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint("https://console.fieldwire.net/api/v3")
+                .setEndpoint(END_POINT + "/api/v3")
                 .setConverter(new GsonConverter(gson))
                 .build();
 
         FieldwireService service  = adapter.create(FieldwireService.class);
 
-        List<Project> projects = service.getProjects(getAuthorization(null));
+        String projectToken = null;
+
+        List<Project> projects = service.getProjects(getAuthorization(projectToken));
         System.out.println(projects);
 
-        Map<String, Object> attributes = new HashMap<String, Object>();
+        Project project = projects.get(0);
+        /*Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("name", "New Project");
 
         Project project = service.createProject(getAuthorization(null), CONTENT_TYPE, attributes);
         System.out.println(project);
+        */
 
-        attributes = new HashMap<String, Object>();
+        /*attributes = new HashMap<String, Object>();
         attributes.put("email", ""); // REPLACE!
         UserResponse userResponse = service.inviteUser(getAuthorization(project.access_token), CONTENT_TYPE, project.id, attributes);
         System.out.println(userResponse.users);
@@ -54,8 +85,39 @@ public class Fieldwire {
         attributes.put("due_date", new Date());
 
         task = service.updateTask(getAuthorization(project.access_token), CONTENT_TYPE, project.id, task.id, attributes);
-        System.out.println(task);
+        System.out.println(task);*/
 
+        System.out.println("project.access_token" + project.access_token);
+
+        AWSPostToken awsPostToken = service.getAWSPostToken(
+                getAuthorization(null)
+                , CONTENT_TYPE);
+        System.out.println(awsPostToken);
+      
+        String filename = "/Users/nicolasrousset/dev/fieldwire_main/fieldwire_ruby_sample/A2.01-1.pdf"; // REPLACE
+        Response response = doAWSPostRequest(awsPostToken, filename);
+
+        if(response.getStatus() == 200 || response.getStatus() == 204)
+        {
+            File file = new File(filename);
+            String fileUrl = getFileUrl(awsPostToken, file);
+
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            attributes.put("name", file.getName());
+            attributes.put("file_url", fileUrl);
+            attributes.put("file_size", file.length());
+            attributes.put("user_id", 1);
+
+            SheetUpload sheetUpload = service.createSheetUpload(getAuthorization(project.access_token), CONTENT_TYPE, project.id, attributes);
+            System.out.println(sheetUpload);
+        }
+    }
+
+    private static String getFileUrl(AWSPostToken awsPostToken, File file)
+    {
+        String aws_key = awsPostToken.post_parameters.get("key").replaceAll("\\$\\{filename\\}", file.getName());
+
+        return awsPostToken.post_address + '/' + aws_key;
     }
 
     private static String getAuthorization(String projectToken) {
