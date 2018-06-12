@@ -7,17 +7,17 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedFile;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
 
 public class Fieldwire {
-    private static final String API_TOKEN = "f414fd23cb902799c492929f465211be"; // REPLACE!
+    private static final String API_TOKEN = ""; // REPLACE!
     private static final String CONTENT_TYPE = "application/json";
 
-    // private static final String END_POINT = "https://console.fieldwire.net";
-    private static final String END_POINT = "http://localhost:3000";
+    private static final String END_POINT = "https://console.fieldwire.net";
 
     public static Response doAWSPostRequest(AWSPostToken awsPostToken, String filename)
     {
@@ -58,15 +58,13 @@ public class Fieldwire {
         List<Project> projects = service.getProjects(getAuthorization(projectToken));
         System.out.println(projects);
 
-        Project project = projects.get(0);
-        /*Map<String, Object> attributes = new HashMap<String, Object>();
+        Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("name", "New Project");
 
         Project project = service.createProject(getAuthorization(null), CONTENT_TYPE, attributes);
         System.out.println(project);
-        */
 
-        /*attributes = new HashMap<String, Object>();
+        attributes = new HashMap<String, Object>();
         attributes.put("email", ""); // REPLACE!
         UserResponse userResponse = service.inviteUser(getAuthorization(project.access_token), CONTENT_TYPE, project.id, attributes);
         System.out.println(userResponse.users);
@@ -85,7 +83,7 @@ public class Fieldwire {
         attributes.put("due_date", new Date());
 
         task = service.updateTask(getAuthorization(project.access_token), CONTENT_TYPE, project.id, task.id, attributes);
-        System.out.println(task);*/
+        System.out.println(task);
 
         System.out.println("project.access_token" + project.access_token);
 
@@ -94,7 +92,7 @@ public class Fieldwire {
                 , CONTENT_TYPE);
         System.out.println(awsPostToken);
       
-        String filename = "/Users/nicolasrousset/dev/fieldwire_main/fieldwire_ruby_sample/A2.01-1.pdf"; // REPLACE
+        String filename = ""; // REPLACE
         Response response = doAWSPostRequest(awsPostToken, filename);
 
         if(response.getStatus() == 200 || response.getStatus() == 204)
@@ -102,11 +100,11 @@ public class Fieldwire {
             File file = new File(filename);
             String fileUrl = getFileUrl(awsPostToken, file);
 
-            Map<String, Object> attributes = new HashMap<String, Object>();
+            attributes = new HashMap<String, Object>();
             attributes.put("name", file.getName());
             attributes.put("file_url", fileUrl);
             attributes.put("file_size", file.length());
-            attributes.put("user_id", 1);
+            attributes.put("user_id", userResponse.users.get(0).id);
 
             SheetUpload sheetUpload = service.createSheetUpload(getAuthorization(project.access_token), CONTENT_TYPE, project.id, attributes);
             System.out.println(sheetUpload);
