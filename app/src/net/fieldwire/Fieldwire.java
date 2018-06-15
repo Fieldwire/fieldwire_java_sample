@@ -53,9 +53,7 @@ public class Fieldwire {
 
         FieldwireService service  = adapter.create(FieldwireService.class);
 
-        String projectToken = null;
-
-        List<Project> projects = service.getProjects(getAuthorization(projectToken));
+        List<Project> projects = service.getProjects(getAuthorization(null));
         System.out.println(projects);
 
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -111,6 +109,10 @@ public class Fieldwire {
         }
     }
 
+    /*
+     *  This function is not necessary to post the file on AWS. It is called after, to get the url of the file.
+     *  AWS is doing the same substitution.
+     */
     private static String getFileUrl(AWSPostToken awsPostToken, File file)
     {
         String aws_key = awsPostToken.post_parameters.get("key").replaceAll("\\$\\{filename\\}", file.getName());
