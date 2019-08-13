@@ -33,11 +33,12 @@ public class Fieldwire {
         return service.postFileToAWS(
                 awsPostToken.post_parameters.get("key"),
                 awsPostToken.post_parameters.get("policy"),
+                awsPostToken.post_parameters.get("acl"),
                 awsPostToken.post_parameters.get("x-amz-signature"),
                 awsPostToken.post_parameters.get("x-amz-date"),
                 awsPostToken.post_parameters.get("x-amz-credential"),
-                awsPostToken.post_parameters.get("acl"),
                 awsPostToken.post_parameters.get("x-amz-algorithm"),
+                awsPostToken.post_parameters.get("x-amz-meta-original-filename"),
                 new TypedFile("multipart/form-data", file));
     }
 
