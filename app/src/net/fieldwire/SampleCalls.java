@@ -164,6 +164,13 @@ public class SampleCalls {
                 )
         );
 
+        if (projectUsersResponse.users.size() == 0) {
+            throw new RuntimeException(String.format(
+                    "User (%s) already exists in the project! Use a different email to be invited",
+                    emailForProjectInvite
+            ));
+        }
+
         ProjectUser user = projectUsersResponse.users.get(0);
         log_info("Invited user to project", user.toString());
 
