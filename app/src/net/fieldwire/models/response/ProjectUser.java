@@ -14,13 +14,15 @@ public class ProjectUser extends AccountUser {
                 ", role='" + role + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", accountRole='" + accountRole + '\'' +
+                ", email='" + email + '\'' +
                 ", company='" + company + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", photoUrl='" + photoUrl + '\'' +
                 ", currentSignInAt=" + currentSignInAt +
                 ", invitedById=" + invitedById +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", id=" + id +
                 '}';
     }

@@ -1,7 +1,9 @@
 package net.fieldwire.models.response;
 
+import java.util.Date;
+
 public class BaseModel<ID> {
-    public String createdAt;
-    public String updatedAt;
+    public Date createdAt;
+    public Date updatedAt;
     public ID id;
 }

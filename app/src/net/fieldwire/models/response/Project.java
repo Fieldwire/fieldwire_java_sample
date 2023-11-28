@@ -15,13 +15,11 @@ public class Project extends BaseDeviceModel {
                 ", address='" + address + '\'' +
                 ", archived_at=" + archived_at +
                 ", is_email_notifications_enabled=" + is_email_notifications_enabled +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", deviceCreatedAt='" + deviceCreatedAt + '\'' +
-                ", deviceUpdatedAt='" + deviceUpdatedAt + '\'' +
-                ", deletedAt='" + deletedAt + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
+                ", deviceCreatedAt=" + deviceCreatedAt +
+                ", deviceUpdatedAt=" + deviceUpdatedAt +
+                ", deletedAt=" + deletedAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", id=" + id +
                 '}';
     }

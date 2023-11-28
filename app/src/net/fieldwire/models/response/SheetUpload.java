@@ -17,8 +17,8 @@ public class SheetUpload extends BaseModel<UUID> {
                 ", fileSize='" + fileSize + '\'' +
                 ", userId=" + userId +
                 ", project_id=" + project_id +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", id=" + id +
                 '}';
     }

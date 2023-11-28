@@ -15,7 +15,7 @@ public class AccountUser extends BaseModel<Integer> {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "AccountUser{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", accountRole='" + accountRole + '\'' +
@@ -25,8 +25,8 @@ public class AccountUser extends BaseModel<Integer> {
                 ", photoUrl='" + photoUrl + '\'' +
                 ", currentSignInAt=" + currentSignInAt +
                 ", invitedById=" + invitedById +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", id=" + id +
                 '}';
     }
