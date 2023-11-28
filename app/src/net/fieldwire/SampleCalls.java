@@ -24,11 +24,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -37,6 +39,7 @@ import okhttp3.logging.HttpLoggingInterceptor.Level;
 import retrofit2.Retrofit;
 import retrofit2.Response;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class SampleCalls {
     @NotNull
@@ -68,7 +71,7 @@ public class SampleCalls {
         // care of refreshing the access token when it expires (or is invalid)
         okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new HeadersAddingInterceptor())
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(Level.BODY))
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(Level.BASIC))
                 .build();
     }
 
@@ -203,11 +206,18 @@ public class SampleCalls {
         // Acquire token
         AwsPostToken awsPostToken = tokenManager.executeWithToken(endpoint::createAwsPostToken);
 
+        // Use a specific client for AWS interaction so we don't send FW
+        // specific info (ex: this doesn't add the `HeaderAddingInterceptor`)
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(Level.BASIC))
+                .build();
+
         // Upload file
         File file = new File(localFilePathForPlan);
         Response<ResponseBody> response = new Retrofit.Builder()
                 .baseUrl(awsPostToken.postAddress() + "/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .client(client)
                 .build()
                 .create(FileUploadEndpoint.class)
                 .postFileToAws(
@@ -219,9 +229,13 @@ public class SampleCalls {
                         awsPostToken.postParameters().get("x-amz-credential"),
                         awsPostToken.postParameters().get("x-amz-algorithm"),
                         awsPostToken.postParameters().get("x-amz-meta-original-filename"),
-                        RequestBody.create(
-                                file,
-                                MediaType.parse("multipart/form-data")
+                        MultipartBody.Part.createFormData(
+                                "file",
+                                file.getName(),
+                                RequestBody.create(
+                                    file,
+                                    MediaType.parse("multipart/form-data")
+                                )
                         )
                 )
                 .execute();

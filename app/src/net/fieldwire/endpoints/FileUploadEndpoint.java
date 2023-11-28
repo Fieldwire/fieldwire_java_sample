@@ -1,7 +1,6 @@
 package net.fieldwire.endpoints;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Multipart;
@@ -9,7 +8,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface FileUploadEndpoint {
-    @POST("/")
+    @POST(".")
     @Multipart
     Call<ResponseBody> postFileToAws(
             @Part("key") String key,
@@ -20,7 +19,7 @@ public interface FileUploadEndpoint {
             @Part("x-amz-credential") String xAmzCredential,
             @Part("x-amz-algorithm") String xAmzAlgorithm,
             @Part("x-amz-meta-original-filename") String xAmzMetaOriginalFilename,
-            @Part("file") RequestBody fileToUpload
+            @Part MultipartBody.Part fileToUpload
     );
 }
 
