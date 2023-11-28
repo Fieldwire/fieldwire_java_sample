@@ -71,7 +71,7 @@ public class TokenManager {
                 .execute();
 
         // NOTE: please make sure to persist this somewhere outside the script
-        // so it can reused for the next invocation of the script (otherwise,
+        // so it be can reused for the next invocation of the script (otherwise,
         // there will be rate limit issues)
         this.accessToken = handleResponse(response).access_token();
     }

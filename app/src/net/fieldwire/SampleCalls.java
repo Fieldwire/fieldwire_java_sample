@@ -64,7 +64,7 @@ public class SampleCalls {
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
 
-        // Build the components that takes care of managing our tokens
+        // Build the component that takes care of managing our tokens
         tokenManager = new TokenManager(refreshToken, accessToken, gson);
 
         // Create an HTTP client with our authenticator middleware which takes
@@ -120,7 +120,7 @@ public class SampleCalls {
             throw new RuntimeException("Unrecognizable region: " + region);
         }
 
-        // Build the impl that allows super endpoints to be called
+        // Build the impl that allows regional endpoints to be called
         RegionalEndpoint endpoint = new Retrofit.Builder()
                 .baseUrl(regionalBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
