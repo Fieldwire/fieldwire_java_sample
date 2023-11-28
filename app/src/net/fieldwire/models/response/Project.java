@@ -1,23 +1,11 @@
-package net.fieldwire;
-
-import com.google.gson.annotations.SerializedName;
+package net.fieldwire.models.response;
 
 import java.util.Date;
 
 public class Project extends BaseDeviceModel {
-    @SerializedName("name")
     public String name;
-
-    @SerializedName("address")
     public String address;
-
-    @SerializedName("archived_at")
     public Date archived_at;
-
-    @SerializedName("access_token")
-    public String access_token;
-
-    @SerializedName("is_email_notifications_enabled")
     public boolean is_email_notifications_enabled;
 
     @Override
@@ -26,8 +14,13 @@ public class Project extends BaseDeviceModel {
                 "name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", archived_at=" + archived_at +
-                ", access_token='" + access_token + '\'' +
                 ", is_email_notifications_enabled=" + is_email_notifications_enabled +
-                "} " + super.toString();
+                ", deviceCreatedAt=" + deviceCreatedAt +
+                ", deviceUpdatedAt=" + deviceUpdatedAt +
+                ", deletedAt=" + deletedAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", id=" + id +
+                '}';
     }
 }
